@@ -35,15 +35,15 @@ public class Astar extends Object{
 		
 		int u, mini=0, found=0;
 		while(open.size()!=0 && found!=1){
-			System.out.println("here1");
+			
 			
 			mini=minIndex(open);
 			u=open.elementAt(mini).id;
 			
 			Heur temp=new Heur();
 			temp=open.elementAt(mini);			
-			
-			
+			//open.remove(mini);
+			System.out.println("here1 : "+temp.id);
 			for(int i=0;i<nodes.elementAt(u).adj.size();i++){
 				
 				 //parent.put(nodes.elementAt(u).adj.elementAt(i),u);
@@ -52,18 +52,20 @@ public class Astar extends Object{
 				
 				Heur child=new Heur();
 				
+				//int x =BinarySearch.BSearch(nodes,0, nodes.size(),nodes.elementAt(u).adj.elementAt(i));
+				
 				child.id=nodes.elementAt(u).adj.elementAt(i);
-				child.g=open.elementAt(mini).g + nodes.elementAt(u).weight.elementAt(child.id);
+				child.g=temp.g + nodes.elementAt(u).weight.elementAt(i);
 				child.h=d.calculateDistance(nodes.elementAt(child.id).lat,  nodes.elementAt(child.id).lon,nodes.elementAt(dest).lat,  nodes.elementAt(dest).lon );
 				child.f=child.h+child.g;
 				//child.parent=open.elementAt(mini);
 				//parent[child.id]=u;
 				
-				if(nodes.elementAt(u).adj.elementAt(i)==dest){
+				if(child.id==dest){
 					 
 					found=1;
 					System.out.println("before inner  return ");
-					
+					parent[child.id]=u;
 					 return child.f;
 				}
 				
@@ -72,19 +74,24 @@ public class Astar extends Object{
 					if(open.elementAt(j).id==child.id){
 						if(child.f<open.elementAt(j).f){
 							open.setElementAt(child, j);
+							
 							parent[child.id]=u;
 							f=1;
+							break;
 							
 						}
 						else{
-							continue;
+							f=1;
+							
 						}
+						break;
 					}
 					
 				}
+				
 				if(f==0)
 				for(int j=0; j<close.size();j++){
-					if( open.elementAt(j).id==child.id){ 
+					if( close.elementAt(j).id==child.id){ 
 						if (child.f<close.elementAt(j).f){
 						
 							open.addElement(child);
@@ -94,8 +101,10 @@ public class Astar extends Object{
 							parent[child.id]=u;
 						}
 						else{
-							continue;
+							f=1;
+							
 						}
+						break;
 					}
 				}
 				
@@ -108,9 +117,9 @@ public class Astar extends Object{
 
 			
 			}
-			
-			open.remove(mini);
 			close.addElement(temp);
+			open.remove(mini);
+			
 		}
 			
 		
@@ -135,64 +144,3 @@ public class Astar extends Object{
 	}
 
 }
-
-/*
-public class Dijkastra extends Object{
-	double dij(Vector<Node> nodes,  Vector<Way> ways, int[] parent, int src, int des){
-		double dist[] =new double[nodes.size()+10];
-		Boolean visit[]=new  Boolean[nodes.size()+10] ;
-		
-		Arrays.fill(dist, Integer.MAX_VALUE);
-		Arrays.fill(parent, -1);
-		Arrays.fill(visit, false);
-		 
-		 dist[src]=0;
-		 
-		 for (int count = 0; count < nodes.size()-1; count++)
-	     {
-			
-			 int u=mindist(dist, visit, nodes.size());
-			 visit[u] = true;
-		         int flag=0;
-				 int i;
-			     for( i=0;i<nodes.elementAt(u).adj.size();i++){
-			        	 int temp=nodes.elementAt(u).adj.elementAt(i);
-			        	 if(!visit[temp] )
-			        	 {
-			        		 flag=1;
-			        	 }
-				
-			        if ( flag==1 && dist[u]+nodes.elementAt(u).weight.elementAt(i) < dist[temp])
-			         {	
-			        	 dist[temp] = dist[u]+nodes.elementAt(u).weight.elementAt(i);
-			        	 //System.out.println("v="+v);
-			        	 parent[temp]=u;
-			         }
-			     	 flag=0;
-		       }
-			     
-			     if(visit[des]==true)
-			    	 break;
-	     }
-			//System.out.println("done");
-
-		
-		
-		 return dist[des];
-	}
-
-	private int mindist(double[] dist, Boolean[] visit, int V) {
-		double min=Integer.MAX_VALUE;
-				int min_index=0;
-		 
-		for (int v = 0; v < V; v++)
-		     {
-				if (visit[v] == false && dist[v] <= min)
-			     {   min = dist[v];
-			 		min_index = v;}
-			     }
-		 return min_index;
-	}
-}
-
-*/

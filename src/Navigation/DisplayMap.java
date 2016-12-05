@@ -1604,7 +1604,7 @@ public void mouseMoved(MouseEvent f)
 
 				int j=0;
 				index1=b.BSearch(nodes, 0, nodes.size() , ways.elementAt(i).ref.elementAt(j));
-				System.out.println("\nindex1 in binary search"+index1);
+				//System.out.println("\nindex1 in binary search"+index1);
 				//System.out.println("\nlon="+nodes.elementAt(index1).lon+ "  lat="+ nodes.elementAt(index1).lat);
 
 				if(index1==-1)
